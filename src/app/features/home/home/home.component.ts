@@ -1,46 +1,100 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { HttpClient, HttpClientModule,  } from '@angular/common/http';
+import { Component, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { DemoButtonService } from '../../../Shared-service/DemoButtonService';
+import { Subscription } from 'rxjs';
+import { DomSanitizer,SafeResourceUrl } from '@angular/platform-browser';
+
+declare var grecaptcha: any;
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule,RecaptchaModule,HttpClientModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
-currentSlide = 0;
-email: string = 'info@medicuity.com';
 
-// formData = {
-//     firstName: '',
-//     lastName: '',
-//     email: '',
-//     organization: '',
-//     phone: ''
-//   };
-//   sendEmail() {
-//     const serviceID = 'YOUR_SERVICE_ID';
-//     const templateID = 'YOUR_TEMPLATE_ID';
-//     const userID = 'YOUR_USER_ID';
 
-//     emailjs.send(serviceID, templateID, this.formData, userID)
-//       .then((result: EmailJSResponseStatus) => {
-//         console.log('Email sent:', result.text);
-//         alert('Demo request sent successfully!');
-//       }, (error) => {
-//         console.error('Failed to send email:', error.text);
-//         alert('Failed to send. Try again later.');
-//       });
-//   }
 
+export class HomeComponent implements OnInit, OnDestroy {
+   isModalOpen = false;
+  calendlySafeUrl: SafeResourceUrl;
+  private subscription!: Subscription;
+  
+constructor(
+    private http: HttpClient,
+    private demoButtonService: DemoButtonService,
+    private sanitizer: DomSanitizer
+  ) {
+    const calendlyUrl = 'https://calendly.com/medicuity-info/30min';
+    this.calendlySafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(calendlyUrl);
+  }
+  
+     openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  demoButtonText = 'Get Demo Access';
+
+onStartTrialClick(text: string) {
+  this.demoButtonText = text
+}
+
+ resolved(captchaResponse: any) {
+    console.log(`Resolved captcha with response: ${captchaResponse}`);
+  }
+
+
+  formData = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    organization: '',
+    phone: ''
+  };
+
+  sendEmail() {
+    const subject = encodeURIComponent('New Demo Request');
+    const body = encodeURIComponent(
+      `First Name: ${this.formData.firstName}\n` +
+      `Last Name: ${this.formData.lastName}\n` +
+      `Email: ${this.formData.email}\n` +
+      `Organization: ${this.formData.organization}\n` +
+      `Phone: ${this.formData.phone}`
+    );
+
+    const mailtoLink = `mailto:info@medicuity.com?subject=${subject}&body=${body}`;
+    window.location.href = mailtoLink;
+  }
+
+  captchaVerified = false;
+  captchaToken = '';
+
+  currentSlide = 0;
+  autoSlideInterval: any;
+
+  selectedFileName: string | null = null;
+  
+  scrollToDemoForm() {
+  const element = document.getElementById('demo-form');
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
 
   slides = [
     {
     svgPaths: ['M13 2L3 14h9l-1 8L21 10h-9l1-8z'],
     title: 'No Historical Data Required',
     description: 'Get started immediately with just your guidelines and a small sample set. Our advanced NLP leverages proven LLMs, not unreliable machine learning from questionable data.',
-    bgColor: 'bg-red-100',
-    iconColor: 'text-red-600'
+    bgColor: 'bg-green-100',
+    iconColor: 'text-green-600'
   },
   {
     svgPaths: ['M3 15a4 4 0 0 1 4-4h1.26A6 6 0 0 1 20 13a4 4 0 0 1 0 8H7a4 4 0 0 1-4-4z'
@@ -58,8 +112,8 @@ email: string = 'info@medicuity.com';
       'M15.5 9C17.433 9 19 7.433 19 5.5C19 3.567 17.433 2 15.5 2C13.567 2 12 3.567 12 5.5'  ],
     title: 'Free for Small Practices',
     description: 'Individual physicians with fewer than 175 appointments monthly get full access to our coding platform at absolutely no cost. Scale your practice worry-free.',
-    bgColor: 'bg-green-100',
-    iconColor: 'text-green-600'
+    bgColor: 'bg-violet-100',
+    iconColor: 'text-violet-600'
   },
 
   {
@@ -69,33 +123,38 @@ email: string = 'info@medicuity.com';
     'M16 3.13a4 4 0 1 1 0 7.75'],
     title: 'Secure Remote Coding',
     description: 'Safely utilize contract coders worldwide without network access risks. All PII is automatically hidden and never permanently stored in our platform.',
-    bgColor: 'bg-purple-100',
-    iconColor: 'text-purple-600'
+    bgColor: 'bg-orange-100',
+    iconColor: 'text-orange-600'
   }
 ];
 
 
- 
-  autoSlideInterval: any;
+email: string = 'info@medicuity.com';
+
+  
 
   ngOnInit() {
     this.startAutoSlide();
+    this.subscription = this.demoButtonService.buttonText$.subscribe(
+      (text) => {
+        this.demoButtonText = text;
+      }
+    );
   }
 
   ngOnDestroy() {
     this.stopAutoSlide();
+    this.subscription.unsubscribe();
   }
 
   startAutoSlide() {
     this.autoSlideInterval = setInterval(() => {
       this.nextSlide();
-    }, 3000); // 3000ms = 3 seconds
+    }, 3000);
   }
 
   stopAutoSlide() {
-    if (this.autoSlideInterval) {
-      clearInterval(this.autoSlideInterval);
-    }
+    if (this.autoSlideInterval) clearInterval(this.autoSlideInterval);
   }
 
   prevSlide() {
@@ -106,38 +165,47 @@ email: string = 'info@medicuity.com';
     this.currentSlide = (this.currentSlide + 1) % this.slides.length;
   }
 
-  goToSlide(index: number) {
+   goToSlide(index: number) {
     this.currentSlide = index;
   }
-  //file upload
-  selectedFileName: string | null = null;
 
-onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0];
-    this.processFile(file);
+
+
+  onSubmit() {
+     
+    this.http.post('http://localhost:9091/email', this.formData).subscribe({
+      next: () => {
+        alert('Email sent successfully!');
+        this.formData = { firstName: '', lastName: '', email: '', organization: '', phone: '' };
+      },
+      error: (err) => {
+        console.error('Error sending email', err);
+        alert('Failed to send email.');
+      }
+    });
   }
-}
 
-onDragOver(event: DragEvent): void {
-  event.preventDefault(); // Allow dropping
-}
-
-onDrop(event: DragEvent): void {
-  event.preventDefault();
-  if (event.dataTransfer && event.dataTransfer.files.length > 0) {
-    const file = event.dataTransfer.files[0];
-    this.processFile(file);
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.processFile(input.files[0]);
+    }
   }
-}
 
-processFile(file: File): void {
-  this.selectedFileName = file.name;
-  console.log('File selected:', file);
-}
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
 
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      this.processFile(event.dataTransfer.files[0]);
+    }
+  }
 
-
+  processFile(file: File): void {
+    this.selectedFileName = file.name;
+    console.log('File selected:', file);
+  }
 
 }

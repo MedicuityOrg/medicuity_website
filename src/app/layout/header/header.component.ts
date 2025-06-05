@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DemoButtonService } from '../../Shared-service/DemoButtonService';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,11 @@ export class HeaderComponent {
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+   constructor(private demoButtonService: DemoButtonService) {}
+
+  onRequestDemoClick() {
+    this.demoButtonService.updateButtonText('Get Demo Access');
   }
 
 }

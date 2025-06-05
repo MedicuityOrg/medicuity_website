@@ -12,16 +12,16 @@
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center space-x-6 font-sans text-base">
         <nav class="flex space-x-6">
-          <a routerLink="/" class="hover:text-blue-400 text-blue-400">Home</a>
+          <a routerLink="/" class="hover:text-blue-400 text-gray-700">Home</a>
           <a routerLink="/solutions" class="text-gray-700 hover:text-blue-600">Solutions</a>
           <a routerLink="/about" class="text-gray-700 hover:text-blue-600">About</a>
           <a routerLink="/contact" class="text-gray-700 hover:text-blue-600">Contact</a>
         </nav>
-        <a routerLink="/request-demo"
-          class="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors text-base">
-          Request Demo
-        </a>
-      </div>
+        <a href="#demo-form" (click)="onRequestDemoClick()"
+   class="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors text-base">
+   Request Demo
+</a>
+      </div> 
 
       <!-- Mobile Menu Button -->
       <div class="md:hidden">
@@ -37,12 +37,12 @@
   </div>
 
   <!-- Mobile Navigation -->
-  <div *ngIf="mobileMenuOpen" class="md:hidden px-4 pb-4 space-y-2 font-poppins text-base font-semibold">
+  <div *ngIf="mobileMenuOpen" class="md:hidden px-4 pb-4 space-y-2 font-poppins text-base font-semibold bg-white">
     <a routerLink="/" class="block text-gray-700 hover:text-blue-600">Home</a>
     <a routerLink="/solutions" class="block text-gray-700 hover:text-blue-600">Solutions</a>
     <a routerLink="/about" class="block text-gray-700 hover:text-blue-600">About</a>
     <a routerLink="/contact" class="block text-gray-700 hover:text-blue-600">Contact</a>
-    <a routerLink="/request-demo"
+    <a href="#demo-form" (click)="onRequestDemoClick()"
       class="block text-white bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded text-center">
       Request Demo
     </a>

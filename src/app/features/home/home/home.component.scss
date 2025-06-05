@@ -1,0 +1,40 @@
+.recaptcha-wrapper {
+  transform: scale(1);
+  transform-origin: top left;
+  width: fit-content;
+}
+
+/* Scale down for tablets */
+@media (max-width: 768px) {
+  .recaptcha-wrapper {
+    transform: scale(0.85);
+  }
+}
+
+/* Further scale down for mobile devices */
+@media (max-width: 480px) {
+  .recaptcha-wrapper {
+    transform: scale(0.75);
+  }
+}
+
+// .popup{
+  
+//   overflow-x: hidden;
+//   overflow-y: hidden;
+// }
+
+
+/* Hide scrollbar for all WebKit browsers */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Hide scrollbar for Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+
