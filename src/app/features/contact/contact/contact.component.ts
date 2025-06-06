@@ -65,6 +65,7 @@ formData = {
     lastName: '',
     email: '',
     organization: '',
+    phone:'',
     message: '',
   };
 
@@ -106,7 +107,8 @@ verifyCaptcha() {
       `Last Name: ${this.formData.lastName}\n` +
       `Email: ${this.formData.email}\n` +
       `Organization: ${this.formData.organization}\n` +
-      `Phone: ${this.formData.message}`
+      `Phone Number: ${this.formData.phone}\n` +
+      `Message: ${this.formData.message}`
     );
 
     const mailtoLink = `mailto:info@medicuity.com?subject=${subject}&body=${body}`;

@@ -60,18 +60,23 @@ onStartTrialClick(text: string) {
   };
 
   sendEmail() {
-    const subject = encodeURIComponent('New Demo Request');
-    const body = encodeURIComponent(
-      `First Name: ${this.formData.firstName}\n` +
-      `Last Name: ${this.formData.lastName}\n` +
-      `Email: ${this.formData.email}\n` +
-      `Organization: ${this.formData.organization}\n` +
-      `Phone: ${this.formData.phone}`
-    );
+  
 
-    const mailtoLink = `mailto:info@medicuity.com?subject=${subject}&body=${body}`;
-    window.location.href = mailtoLink;
-  }
+  const subject = encodeURIComponent(`${this.demoButtonText}`);
+  const body = encodeURIComponent(
+    `Request Type: ${this.demoButtonText}\n`+
+    `First Name: ${this.formData.firstName}\n` +
+    `Last Name: ${this.formData.lastName}\n` +
+    `Email: ${this.formData.email}\n` +
+    `Organization: ${this.formData.organization}\n` +
+    `Phone: ${this.formData.phone}\n`
+        
+  );
+
+  const mailtoLink = `mailto:info@medicuity.com?subject=${subject}&body=${body}`;
+  window.location.href = mailtoLink;
+}
+
 
   captchaVerified = false;
   captchaToken = '';
@@ -171,19 +176,7 @@ email: string = 'info@medicuity.com';
 
 
 
-  onSubmit() {
-     
-    this.http.post('http://localhost:9091/email', this.formData).subscribe({
-      next: () => {
-        alert('Email sent successfully!');
-        this.formData = { firstName: '', lastName: '', email: '', organization: '', phone: '' };
-      },
-      error: (err) => {
-        console.error('Error sending email', err);
-        alert('Failed to send email.');
-      }
-    });
-  }
+
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

@@ -15,10 +15,17 @@ export class HeaderComponent {
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
+  onMobileLinkClick(){
+    this.mobileMenuOpen=false
+    ;
+  }
+
+
    constructor(private demoButtonService: DemoButtonService) {}
 
   onRequestDemoClick() {
     this.demoButtonService.updateButtonText('Get Demo Access');
   }
+
 
 }
