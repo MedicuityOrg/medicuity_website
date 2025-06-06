@@ -4,68 +4,19 @@ import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Vali
 
 @Component({
   selector: 'app-contact',
-  imports: [CommonModule,ReactiveFormsModule,FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'
 })
 export class ContactComponent {
-info: String='info@medicuity.com';
-// contactForm!: FormGroup;
-//   captcha: string = '';
-//   captchaInput: string = '';
-//   captchaVerified: boolean = false;
+  info: String = 'info@medicuity.com';
 
-//   constructor(private fb: FormBuilder) {}
-
-//   ngOnInit() {
-//     this.contactForm = this.fb.group({
-//       firstName: ['', Validators.required],
-//       lastName: ['', Validators.required],
-//       email: ['', [Validators.required, Validators.email]],
-//       organization: ['', Validators.required],
-//       message: ['', Validators.required],
-//     });
-
-//     this.generateCaptcha();
-//   }
-
-//   generateCaptcha() {
-//     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-//     this.captcha = Array.from({ length: 6 }, () =>
-//       chars[Math.floor(Math.random() * chars.length)]
-//     ).join('');
-//     this.captchaInput = '';
-//     this.captchaVerified = false;
-//   }
-
-//   verifyCaptcha() {
-//   const entered = this.captchaInput.trim().toUpperCase();
-//   const actual = this.captcha.trim().toUpperCase();  // normalize both
-
-//   if (entered === actual) {
-//     this.captchaVerified = true;
-//     alert('✅ CAPTCHA Verified!');
-//   } else {
-//     alert('❌ CAPTCHA Incorrect. Try again.');
-//     this.generateCaptcha();
-//   }
-// }
-
-
-//   onSubmit() {
-//     if (this.contactForm.valid && this.captchaVerified) {
-//       console.log('Form Submitted', this.contactForm.value);
-//       alert('Form submitted successfully!');
-//       this.contactForm.reset();
-//       this.generateCaptcha();
-//     }
-//   }
-formData = {
+  formData = {
     firstName: '',
     lastName: '',
     email: '',
     organization: '',
-    phone:'',
+    phone: '',
     message: '',
   };
 
@@ -84,21 +35,21 @@ formData = {
     this.captchaVerified = false;
   }
 
- captchaMessage: string = '';
-captchaMessageClass: string = ''; // For styling (success or error)
+  captchaMessage: string = '';
+  captchaMessageClass: string = ''; 
 
-verifyCaptcha() {
-  if (this.captchaInput.trim().toUpperCase() === this.captcha) {
-    this.captchaVerified = true;
-    this.captchaMessage = '✅ CAPTCHA Verified!';
-    this.captchaMessageClass = 'text-green-600';
-  } else {
-    this.captchaVerified = false;
-    this.captchaMessage = '❌ CAPTCHA Incorrect!';
-    this.captchaMessageClass = 'text-red-600';
-    this.generateCaptcha();
+  verifyCaptcha() {
+    if (this.captchaInput.trim().toUpperCase() === this.captcha) {
+      this.captchaVerified = true;
+      this.captchaMessage = '✅ CAPTCHA Verified!';
+      this.captchaMessageClass = 'text-green-600';
+    } else {
+      this.captchaVerified = false;
+      this.captchaMessage = '❌ CAPTCHA Incorrect!';
+      this.captchaMessageClass = 'text-red-600';
+      this.generateCaptcha();
+    }
   }
-}
 
   sendEmail() {
     const subject = encodeURIComponent('Contact Form');
@@ -116,12 +67,12 @@ verifyCaptcha() {
   }
 
   onSubmit() {
-  if (!this.captchaVerified) {
-     this.captchaMessage = '⚠️ Please verify CAPTCHA before submitting!';
-    this.captchaMessageClass = 'text-yellow-600';
-    return;
-  }
+    if (!this.captchaVerified) {
+      this.captchaMessage = '⚠️ Please verify CAPTCHA before submitting!';
+      this.captchaMessageClass = 'text-yellow-600';
+      return;
+    }
 
-  this.sendEmail();
-}
+    this.sendEmail();
+  }
 }
