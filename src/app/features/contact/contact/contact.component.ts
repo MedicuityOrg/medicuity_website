@@ -83,15 +83,21 @@ formData = {
     this.captchaVerified = false;
   }
 
-  verifyCaptcha() {
-    if (this.captchaInput.trim().toUpperCase() === this.captcha) {
-      this.captchaVerified = true;
-      alert('✅ CAPTCHA Verified!');
-    } else {
-      alert('❌ CAPTCHA Incorrect!');
-      this.generateCaptcha();
-    }
+ captchaMessage: string = '';
+captchaMessageClass: string = ''; // For styling (success or error)
+
+verifyCaptcha() {
+  if (this.captchaInput.trim().toUpperCase() === this.captcha) {
+    this.captchaVerified = true;
+    this.captchaMessage = '✅ CAPTCHA Verified!';
+    this.captchaMessageClass = 'text-green-600';
+  } else {
+    this.captchaVerified = false;
+    this.captchaMessage = '❌ CAPTCHA Incorrect!';
+    this.captchaMessageClass = 'text-red-600';
+    this.generateCaptcha();
   }
+}
 
   sendEmail() {
     const subject = encodeURIComponent('Contact Form');
@@ -103,13 +109,14 @@ formData = {
       `Phone: ${this.formData.message}`
     );
 
-    const mailtoLink = `mailto:info.medicuity.com?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:info@medicuity.com?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
   }
 
   onSubmit() {
   if (!this.captchaVerified) {
-    alert('⚠️ Please verify CAPTCHA before submitting!');
+     this.captchaMessage = '⚠️ Please verify CAPTCHA before submitting!';
+    this.captchaMessageClass = 'text-yellow-600';
     return;
   }
 

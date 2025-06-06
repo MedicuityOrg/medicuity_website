@@ -290,6 +290,9 @@
       Verify CAPTCHA
     </button>
   </div>
+  <p *ngIf="captchaMessage" [ngClass]="captchaMessageClass" class="mt-2 text-sm font-medium">
+  {{ captchaMessage }}
+</p>
 
   <button
     type="submit"
